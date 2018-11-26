@@ -12,6 +12,16 @@ static void on_reshape(int width, int height);
 
 int main(int argc, char *argv[])
 {
+    GLfloat light_ambient[] = { 0.1, 0.1, 0.1, 1 };
+    GLfloat light_diffuse[] = { 0.7, 0.7, 0.7, 1 };
+    GLfloat light_specular[] = { 0.9, 0.9, 0.9, 1 };
+
+    GLfloat ambient_coeffs[] = { 0, 0, 0, 1 };
+    GLfloat diffuse_coeffs[] = { .7, .7, .7, 1 };
+    GLfloat specular_coeffs[] = { .2, .2, .2, 1 };
+    
+    GLfloat shininess = 30;
+    
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DEPTH | GLUT_DOUBLE);
 
@@ -32,6 +42,20 @@ int main(int argc, char *argv[])
 
     glClearColor(.66, .66, .66, 0);
     glEnable(GL_DEPTH_TEST);
+
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_coeffs);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_coeffs);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coeffs);
+    glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+
+
     glLineWidth(1);
 
     glutMainLoop();
@@ -102,10 +126,13 @@ static void on_reshape(int width, int height)
 
 static void on_display(void)
 {
+    GLfloat light_position[] = { 0, 0, 0, 1 };
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     gluLookAt(
         5 * cos(beta) * cos(alfa),  
         5 * cos(beta) * sin(alfa), 
@@ -119,7 +146,7 @@ static void on_display(void)
     glColor3f(0, 0, 0);
     // glTranslatef(1, 1, 0);
     glScalef(1, 1, 2);
-    glutWireCube(1);
+    glutSolidCube(1);
 
     glPopMatrix();
 
