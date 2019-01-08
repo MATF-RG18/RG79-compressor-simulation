@@ -1,0 +1,2 @@
+propeler - https://www.youtube.com/watch?v=HRplGHssDGo
+model loading - http://www.opengl-tutorial.org/beginners-tutorials/tutorial-7-model-loading/
