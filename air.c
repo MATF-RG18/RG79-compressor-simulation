@@ -18,11 +18,12 @@ extern void air_timer(int id)
         
         for(int i=0; i<n_air; i++){
             if(arr_air[i].in)
-                move_air(i);
+                move_air(i);//ukoliko se prikazuje pomeri lopticu
             else {
+                //ukoliko se ne prikazuje priblizi je tacki odakle ce se prikazati
                 arr_air[i].y -= 0.02;
                 if(arr_air[i].y <= 4.5)
-                    arr_air[i].in = 1;
+                    arr_air[i].in = 1;//ukoliko je presla granicu za prikaz, prikazi je
             }
         }
         
@@ -35,8 +36,9 @@ extern void air_timer(int id)
         glutTimerFunc(TIMER_INTERVAL, air_timer, TIMER_ID);
 
 }
-
+//funkcija kretanja loptice
 static void move_air(int i){
+    //pocetna inicijalizacija
     float airX = arr_air[i].x;
     float airY = arr_air[i].y;
     float airZ = arr_air[i].z;
@@ -63,7 +65,8 @@ static void move_air(int i){
     int indeks9 = arr_air[i].indeks9;
     int indeks10 = arr_air[i].indeks10;
     int indeks11 = arr_air[i].indeks11;
-
+    
+    //pomeranja loptice
     if(airY >= 2.5 && !indeks5){
             airY -= 0.02;
         }else if(airX >= -4 && !indeks5){
@@ -166,6 +169,7 @@ static void move_air(int i){
             airX += 0.05;
         }
         else {
+             //na kraju vracamo lopticu na pocetak
             airX = -2;
             airY = 4.5;
             airZ = 0.75;
@@ -196,7 +200,7 @@ static void move_air(int i){
         }
 
 
-
+//pamcenej promenjenih koordinatas
     arr_air[i].x = airX;
     arr_air[i].y = airY;
     arr_air[i].z = airZ;

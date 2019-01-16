@@ -1,13 +1,15 @@
 extern void air_timer(int id);
 static void move_air(int i);
-
+//struktura za cuvanje kretanje kuglica vazduha
 typedef struct{
+    //koordinate
     float x;
     float y;
     float z;
 
-    int in;
+    int in;//da li se prikazuje
 
+    //uglovi kroz koje prolazi i njihovo pomeranje
     float angle_air1;
     float angle_air2;
     float angle_air3;
@@ -20,6 +22,8 @@ typedef struct{
     float angle_air10;
     float angle_air11;
     float angle_air12;
+
+    //indeks koj sluzi za proveru da li je odredjeno pomeranje vec izvrseno
     int indeks1;
     int indeks2;
     int indeks3;
@@ -35,6 +39,5 @@ typedef struct{
 } Air;
 
 int n_air;
-extern Air arr_air[57];
-
-extern int air_ongoing;
+extern Air arr_air[57]; //inicijalizacja niza loptica
+extern int air_ongoing; //da li je animacija u toku

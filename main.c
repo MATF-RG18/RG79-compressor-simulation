@@ -30,6 +30,7 @@
 #define PIPELINE4_ID 11
 #define PIPELINE5_ID 12
 
+//struktura za cuvanje modela
 typedef struct Vertex
 {
     double position[3];
@@ -37,39 +38,38 @@ typedef struct Vertex
     double normal[3];
 } Vertex;
 
+//struktura za cuvanje podataka iz .obj fajla
 typedef struct VertRef
 {
     int v, vt, vn;
 } VertRef;
 
-
+//promenljive za pomeranje kamere misom
 static int mouse_x, mouse_y;
 static int window_width, window_height;
 static float matrix[16];
 
+//parametri za pokretanje animacije
 static float animation_parametar = 0;
 static int animation_ongoing = 0;
 
-static float scrollX = 0;
-static float scrollY = 0;
-static float scrollZ = 0;
-
-
+//parametri za animaciju vazduha
 int air_ongoing = 0;
 Air arr_air[57];
 int n_air = 57;
 
+//parametri za animaciju ulja od filtera do bloka
 int oil1_ongoing = 0;
 Oil1 arr[100];
 int n = 100;
 
 
-
+//paramteri za animaciju ulja od rezervoara do bloka
 int oil2_ongoing = 0;
 Oil2 arr_oil2[150];
 int n_oil2 = 150;
 
-//models
+//promenljive gde se cuvaju modeli
 static Vertex *model;
 static int model_size = 0;
 
@@ -114,7 +114,6 @@ static void on_timer(int id);
 static void on_mouse(int button, int state, int x, int y);
 static void on_motion(int x, int y);
 
-static void draw_axes(void);
 static void draw_propeller(void);
 static void draw_pressure_chamber(void);
 static void draw_block(void);
@@ -141,7 +140,7 @@ int main(int argc, char *argv[])
     glutInitWindowPosition(100, 100);
 
     glutCreateWindow(argv[0]);
-    //
+    //inicijaliacija za animaciju ulja od filtera do bloka
     arr[0].x = 5.75;
     arr[0].y = -0.7;
     arr[0].z = -0.2;
@@ -170,9 +169,9 @@ int main(int argc, char *argv[])
         arr[i].indeks2 = 0;
         arr[i].indeks3 = 0;
         arr[i].indeks4 = 0;
-    }  
-    //
-    
+    } 
+
+    //inicijalizacija za animaciju vazduha
     arr_air[0].x = -2;
     arr_air[0].y = 4.5;
     arr_air[0].z = 0.75;
@@ -233,8 +232,8 @@ int main(int argc, char *argv[])
         arr_air[i].indeks10 = 0;
         arr_air[i].indeks11 = 0;
     }
-    //
-
+    
+    //animacija za inicijalizaciju ulja od rezervoara do bloka
     arr_oil2[0].x = 7;
     arr_oil2[0].y = -2.6;
     arr_oil2[0].z = 0.1;
@@ -320,6 +319,7 @@ int main(int argc, char *argv[])
 
     glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, 1);
 
+    //otvaranje .obj fajlova i prosledjivanje u funkciju za ucitavanje modela
     FILE * fileP = fopen("./blender_models/propeller.obj", "r");
     if( fileP == NULL ){
         printf("Impossible to open the file !\n");
@@ -422,6 +422,7 @@ static void on_keyboard(unsigned char key, int x , int y)
             break;
         case 'b':
         case 'B':
+        // dugme za pocetak animacije
             if(!animation_ongoing){
                 animation_ongoing = 1;
                 air_ongoing = 1;
@@ -436,11 +437,16 @@ static void on_keyboard(unsigned char key, int x , int y)
             break;
         case 'e':
         case 'E':
+        //dugme za prekid animacije
             animation_ongoing = 0;
+            animation_ongoing = 0;
+            air_ongoing = 0;
+            oil1_ongoing = 0;
+            oil2_ongoing = 0;
             break;
     }
 }
-
+//timer funkcija za propeler
 static void on_timer(int id)
 {
     if(id == TIMER_ID)
@@ -482,13 +488,14 @@ static void on_display(void)
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
     
     gluLookAt(
-        0+scrollX, 1+scrollY, 20+scrollZ,
+        0, 1, 20,
         0, 0, 0,
         0, 1, 0
     );
     glMultMatrixf(matrix);
     
 
+    //iscrtavanje ventilatora(propelera) za hladjenje
      glPushMatrix();
     {
         glTranslatef(-3, 5.5, 0);
@@ -497,6 +504,7 @@ static void on_display(void)
     }
     glPopMatrix();
 
+    //iscrtavanje loptica za ulje od rezervoara do bloka
     for(int i=0; i<n_oil2; i++){
         glPushMatrix();
         {
@@ -510,6 +518,7 @@ static void on_display(void)
         glPopMatrix();
     }
 
+    //iscrtavanje loptica za vazduh
     for(int i=0; i<n; i++){
         glPushMatrix();
         {
@@ -524,6 +533,7 @@ static void on_display(void)
         glPopMatrix();
     }
 
+    // //iscrtavanje loptica za ulje od filtera do bloka
     for(int i=0; i<n_air; i++){
         glPushMatrix();
         {
@@ -537,6 +547,7 @@ static void on_display(void)
         glPopMatrix();
     }
 
+    //iscrtavanje cevki od rezervoara do ventilatora pa do bloka
     glPushMatrix();
     {
         glTranslatef(3.3, -4, 0);
@@ -544,6 +555,7 @@ static void on_display(void)
     }
     glPopMatrix();
 
+    //iscrtavanje cevke od pipeline5 do bloka
     glPushMatrix();
     {
         glTranslatef(-3.5, -5, 0);
@@ -551,6 +563,7 @@ static void on_display(void)
     }
     glPopMatrix();
 
+    //iscrtavanje cevki od bloka do rezervoara
      glPushMatrix();
     {
         glTranslatef(0, -3.5, 0);
@@ -558,6 +571,7 @@ static void on_display(void)
     }
     glPopMatrix();
 
+    //iscrtavanje cevki od filtera do bloka
     glPushMatrix();
     {
         glTranslatef(0, -1, 0);
@@ -565,6 +579,7 @@ static void on_display(void)
     }
     glPopMatrix();
 
+    //iscrtavanje cevki od rezervoara van kompresora
     glPushMatrix();
     {
         glTranslatef(3.9, 4, 0);
@@ -572,6 +587,7 @@ static void on_display(void)
     }
     glPopMatrix();
 
+    // iscrtavanje rezervoara sa filterom
     glPushMatrix();
     {
         glTranslatef(6, -2, 0);
@@ -580,6 +596,7 @@ static void on_display(void)
     }
     glPopMatrix();
 
+    //crtanje vicanog bloka
     glPushMatrix();
     {
         glTranslatef(-3, -5, 0);
@@ -593,39 +610,7 @@ static void on_display(void)
     glutSwapBuffers();
 }
 
-
-static void draw_axes(void)
-{
-    glBegin(GL_LINES);
-        GLfloat ambient1[] = {1,0,0,0};
-        GLfloat diffuse1[] = {1,0,0,0};
-        glMaterialfv(GL_FRONT, GL_AMBIENT, ambient1);
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse1);
-        glMaterialfv(GL_BACK, GL_AMBIENT, ambient1);
-        glMaterialfv(GL_BACK, GL_DIFFUSE, diffuse1);
-        glVertex3f(0, 0, -100);
-        glVertex3f(0, 0, 100);
-
-        GLfloat ambient2[] = {0,1,0,0};
-        GLfloat diffuse2[] = {0,1,0,0};
-        glMaterialfv(GL_FRONT, GL_AMBIENT, ambient2);
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse2);
-        glMaterialfv(GL_BACK, GL_AMBIENT, ambient2);
-        glMaterialfv(GL_BACK, GL_DIFFUSE, diffuse2);
-        glVertex3f(0, -100, 0);
-        glVertex3f(0, 100, 0);
-
-        GLfloat ambient3[] = {0,0,1,0};
-        GLfloat diffuse3[] = {0,0,1,0};
-        glMaterialfv(GL_FRONT, GL_AMBIENT, ambient3);
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse3);
-        glMaterialfv(GL_BACK, GL_AMBIENT, ambient3);
-        glMaterialfv(GL_BACK, GL_DIFFUSE, diffuse3);
-        glVertex3f(-100, 0, 0);
-        glVertex3f(100, 0, 0);
-    glEnd();
-}
-
+//funkcija za iscrtavanje ventilatora
 static void draw_propeller(void)
 {
     GLfloat ambient_coeffs[] = { 0, 0, 0, 1 };
@@ -639,6 +624,14 @@ static void draw_propeller(void)
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
     glRotatef(9*animation_parametar,0, 1, 0);
     glScalef(.5, .5, .5);
+    /*
+    Model ucitavamo tako sto inicijalizujemo glBegin na GL_TRIANGLES
+    prolazimo petljom kroz niz tipa Vertex i citamo redom potrebne podatke
+    u glnormal3f stavaljmo odgovarajuce koordinate (0=x, 1=y, 2=z)
+    isto i za glVertex3f
+    posle toga zavrsavamo sa glEnd
+    Dalje svaki sledeci model ucitavamo po istom principu
+    */
     glBegin(GL_TRIANGLES);
         for(int i=0; i<model_size; i++){
                 glNormal3f(model[i].normal[0], model[i].normal[1], model[i].normal[2]);
@@ -647,6 +640,7 @@ static void draw_propeller(void)
     glEnd();
 }
 
+//funkcija za iscrtavanje rezervoara sa filterom
 static void draw_pressure_chamber(void)
 {
 
@@ -696,7 +690,7 @@ static void draw_pressure_chamber(void)
     glDisable(GL_BLEND);
 }
 
-
+//funkcija za iscrtavanje vicanog bloka
 static void draw_block(void)
 {
     
@@ -806,10 +800,10 @@ static void draw_block(void)
             } 
         glEnd();
     glPopMatrix();
-    //
     glDisable(GL_BLEND);
 }
 
+//funkcija za iscrtavanje cevki koje vode od rezervoara van kompresora
 static void draw_pipeline1(void){
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_SRC_COLOR);
@@ -836,6 +830,7 @@ static void draw_pipeline1(void){
     glDisable(GL_BLEND);
 }
 
+//funkcija za iscrtavanje cevi od filtera do bloka
 static void draw_pipeline2(void){
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_SRC_COLOR);
@@ -862,7 +857,7 @@ static void draw_pipeline2(void){
     glDisable(GL_BLEND);
 }
 
-
+//funkcija za iscrtavanje cevki od bloka do rezervoara
 static void draw_pipeline3(void){
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_SRC_COLOR);
@@ -888,7 +883,7 @@ static void draw_pipeline3(void){
     glPopMatrix();
     glDisable(GL_BLEND);
 }
-
+//funkcija za iscrtavanje cevki od rezervoara do ventilatora pa do bloka
 static void draw_pipeline5(void){
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_SRC_COLOR);
@@ -915,6 +910,7 @@ static void draw_pipeline5(void){
     glDisable(GL_BLEND);
 }
 
+//funkcija iscrtavanje cevke od pipeline5 do bloka
 static void draw_pipeline4(void){
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_SRC_COLOR);
@@ -962,11 +958,14 @@ static void draw_pipeline4(void){
     glDisable(GL_BLEND);
 }
 
-
+//funkcija za ucitavanje modela iz .obj fajla. Prosledjuju joj se FILE* i id koj predstavlja koj model ucitavamo
 Vertex* LoadObj(FILE * file, int id){
+    //na pocetku pravimo prostor na memoriji za model
     int verts_count = 0;
     int verts_count_of = STEP;
     Vertex *verts = malloc(verts_count_of * sizeof(Vertex));
+    
+    //pozicija
     int num_of_pos = STEP;
     double **positions = malloc(num_of_pos * sizeof(double*));
     for(int i=0; i<num_of_pos; i++){
@@ -976,6 +975,7 @@ Vertex* LoadObj(FILE * file, int id){
     positions[0][1] = 0;
     positions[0][2] = 0;
 
+    //teksture
     int num_of_tc = STEP;
     double **texcoords = malloc(num_of_tc * sizeof(double*));
     for(int i=0; i<num_of_tc; i++){
@@ -985,6 +985,7 @@ Vertex* LoadObj(FILE * file, int id){
     texcoords[0][1] = 0;
     texcoords[0][2] = 0;
 
+    //normale
     int num_of_n = STEP;
     double **normals = malloc(num_of_n * sizeof(double*));
     for(int i=0; i<num_of_n; i++){
@@ -1000,10 +1001,12 @@ Vertex* LoadObj(FILE * file, int id){
     int countPos = 1;
     int countTC = 1;
     int countN = 1;
+    //citamo liniju po liniju i u odnosu na odgovarajuce slovo stavljamo koordinate u odgovarajucu matricu
     while((read = getline(&line, &len, file)) != -1){
         char type[5];
         sscanf(line, "%s ", type);
         if(strcmp(type, "v") == 0){
+            //koordinate za poziciju
             double x = 0, y = 0, z = 0;
             sscanf(line, "v %lf %lf %lf",   &x, &y, &z);
             if(countPos >= num_of_pos){
@@ -1019,6 +1022,7 @@ Vertex* LoadObj(FILE * file, int id){
         }
         
         if(strcmp(type, "vt") == 0){
+            //koordinate za teksture
             double u = 0, v = 0, t = 0;
             sscanf(line, "vt %lf %lf %lf", &u, &v, &t);
             if(countTC >= num_of_tc){
@@ -1034,6 +1038,7 @@ Vertex* LoadObj(FILE * file, int id){
         }
 
         if(strcmp(type, "vn") == 0){
+            //koordinate za normale
             double i = 0, j = 0, k = 0;
             sscanf(line, "vn %lf %lf %lf", &i, &j, &k);
             if(countN >= num_of_n){
@@ -1049,6 +1054,7 @@ Vertex* LoadObj(FILE * file, int id){
         }
 
         if(strcmp(type, "f") == 0){
+            //koordinate koje nam govore kako su rasporedjene koordinate pozicija, tekstura i normala
             int ref_step = STEP;
             VertRef *refs = malloc(ref_step * sizeof(VertRef));
             char a[256];
@@ -1075,6 +1081,7 @@ Vertex* LoadObj(FILE * file, int id){
                 refs[ref_count].vt = atoi(vta);
                 ref_count += 1;
             }
+            //redjanju tacka tako da budu dobre za triangulaciju
             for(int i=1; i+1 < ref_count; i++){
                 const VertRef *p[3] = {&refs[0], &refs[i], &refs[i+1]};
                 double U[3] ={0};
@@ -1134,6 +1141,7 @@ Vertex* LoadObj(FILE * file, int id){
         }
 
     }
+    //pamcenje duzine niza u odnosu na odgovarajuci id
     if(id == PROPELLER_ID)
         model_size = verts_count;
     else if(id == CYLINDER_ID)
@@ -1159,6 +1167,7 @@ Vertex* LoadObj(FILE * file, int id){
     else if(id == PIPELINE5_ID)
         model_size_pipeline5 = verts_count;
 
+    //oslobadjanje memorije
     for(int i=0; i<countPos; i++)
         free(positions[i]);
     free(positions);
@@ -1173,13 +1182,13 @@ Vertex* LoadObj(FILE * file, int id){
 
     return verts;
 }
-
+//funckija za koordinate misa
 static void on_mouse(int button, int state, int x, int y)
 {
     mouse_x = x;
     mouse_y = y;
 }
-
+//funkcija za pokret
 static void on_motion(int x, int y)
 {
     int delta_x, delta_y;

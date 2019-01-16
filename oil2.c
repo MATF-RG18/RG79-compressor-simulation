@@ -17,11 +17,11 @@ extern void oil2_timer(int id)
     {   
         for(int i=0; i<n_oil2; i++){
             if(arr_oil2[i].in)
-                move_oil2(i);
+                move_oil2(i);//ukoliko se prikazuje pomeri lopticu
             else {
-                arr_oil2[i].x += 0.02;
+                arr_oil2[i].x += 0.02;//ukoliko se ne prikazuje priblizi je tacki odakle ce se prikazati
                 if(arr_oil2[i].x >= 7)
-                    arr_oil2[i].in = 1;
+                    arr_oil2[i].in = 1;//ukoliko je presla granicu za prikaz, prikazi je
             }
         }
         
@@ -35,8 +35,9 @@ extern void oil2_timer(int id)
 
 }
 
-
+//funkcija kretanja loptice
 static void move_oil2(int i){
+    //pocetna inicijalizacija
     float oil2X = arr_oil2[i].x;
     float oil2Y = arr_oil2[i].y;
     float oil2Z = arr_oil2[i].z;
@@ -68,7 +69,8 @@ static void move_oil2(int i){
     int indeks12 = arr_oil2[i].indeks12;
     int indeks13 = arr_oil2[i].indeks13;
     int indeks14 = arr_oil2[i].indeks14;
-
+    
+    //pomeranja loptice
     if(oil2X < 7.5 && !indeks1){
             oil2X += 0.02;
         }else if(angle1 > 0){
@@ -171,6 +173,7 @@ static void move_oil2(int i){
         } else if(oil2Y < -5.5){
             oil2Y += 0.02;
         } else {
+            //na kraju vracamo lopticu na pocetak
             angle1 = Pi/2;
             angle2 = 0;
             angle3 = 3*Pi/2;
@@ -203,7 +206,7 @@ static void move_oil2(int i){
             oil2Y = -2.6;
             oil2Z = 0.1;
         }
-
+//pamcenej promenjenih koordinata
     arr_oil2[i].x = oil2X;
     arr_oil2[i].y = oil2Y;
     arr_oil2[i].z = oil2Z;

@@ -2,12 +2,16 @@
 extern void oil2_timer(int id);
 static void move_oil2(int i);
 
+//struktura za cuvanje kretanje kuglica ulja
 typedef struct {
+    //koordinate
     float x;
     float y;
     float z;
-    int in;
 
+    int in;//da li se prikazuje
+
+    //uglovi kroz koje prolazi i njihovo pomeranje
     float angle1;
     float angle2; 
     float angle3;
@@ -21,6 +25,7 @@ typedef struct {
     float angle11;
     float angle12;
 
+    //indeks koj sluzi za proveru da li je odredjeno pomeranje vec izvrseno
     int indeks1;
     int indeks2;
     int indeks3;
@@ -39,6 +44,7 @@ typedef struct {
 } Oil2;
 
 int n_oil2;
-extern Oil2 arr_oil2[150];
+extern Oil2 arr_oil2[150];//inicijalizacja niza loptica
 
-extern int oil2_ongoing;
+
+extern int oil2_ongoing;//da li je animacija u toku
