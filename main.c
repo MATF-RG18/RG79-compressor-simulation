@@ -6,10 +6,15 @@
 #include <string.h>
 #include <ctype.h>
 
+#include "air.h"
+#include "oil1.h"
+#include "oil2.h"
+
 
 #define STEP 100
 #define TIMER_INTERVAL 20
 #define TIMER_ID 0
+#define Pi 3.14159265359
 
 //model macros
 #define PROPELLER_ID 1
@@ -48,6 +53,21 @@ static int animation_ongoing = 0;
 static float scrollX = 0;
 static float scrollY = 0;
 static float scrollZ = 0;
+
+
+int air_ongoing = 0;
+Air arr_air[57];
+int n_air = 57;
+
+int oil1_ongoing = 0;
+Oil1 arr[100];
+int n = 100;
+
+
+
+int oil2_ongoing = 0;
+Oil2 arr_oil2[150];
+int n_oil2 = 150;
 
 //models
 static Vertex *model;
@@ -121,8 +141,166 @@ int main(int argc, char *argv[])
     glutInitWindowPosition(100, 100);
 
     glutCreateWindow(argv[0]);
+    //
+    arr[0].x = 5.75;
+    arr[0].y = -0.7;
+    arr[0].z = -0.2;
+    arr[0].in = 1;
 
+    arr[0].angle1 = 0;
+    arr[0].angle2 = Pi/2;
+    arr[0].angle3 = 0;
+    arr[0].angle4 = Pi/2;
+    arr[0].indeks1 = 0;
+    arr[0].indeks2 = 0;
+    arr[0].indeks3 = 0;
+    arr[0].indeks4 = 0;
+
+    for(int i=1; i<n; i++){
+        
+        arr[i].x = 5.75;
+        arr[i].y =  arr[0].y - i*0.2;
+        arr[i].z = -0.2;
+        arr[i].in = 0;
+        arr[i].angle1 = 0;
+        arr[i].angle2 = Pi/2;
+        arr[i].angle3 = 0;
+        arr[i].angle4 = Pi/2;
+        arr[i].indeks1 = 0;
+        arr[i].indeks2 = 0;
+        arr[i].indeks3 = 0;
+        arr[i].indeks4 = 0;
+    }  
+    //
     
+    arr_air[0].x = -2;
+    arr_air[0].y = 4.5;
+    arr_air[0].z = 0.75;
+    arr_air[0].in = 1;
+
+    arr_air[0].angle_air1 = 3*Pi/2;
+    arr_air[0].angle_air2 = 0;
+    arr_air[0].angle_air3 = 3*Pi/2;
+    arr_air[0].angle_air4 = Pi;
+    arr_air[0].angle_air5 = Pi;
+    arr_air[0].angle_air6 = Pi;
+    arr_air[0].angle_air7 = Pi;
+    arr_air[0].angle_air8 = Pi/2;
+    arr_air[0].angle_air9 = Pi/2;
+    arr_air[0].angle_air10 = 3*Pi/2;
+    arr_air[0].angle_air11 = Pi;
+    arr_air[0].angle_air12 = 3*Pi/2;
+    arr_air[0].indeks1 = 0;
+    arr_air[0].indeks2 = 0;
+    arr_air[0].indeks3 = 0;
+    arr_air[0].indeks4 = 0;
+    arr_air[0].indeks5 = 0;
+    arr_air[0].indeks6 = 0;
+    arr_air[0].indeks7 = 0;
+    arr_air[0].indeks8 = 0;
+    arr_air[0].indeks9 = 0;
+    arr_air[0].indeks10 = 0;
+    arr_air[0].indeks11 = 0;
+
+
+    for(int i=1; i<n_air; i++){
+        arr_air[i].x = -2;
+        arr_air[i].y = arr_air[0].y + i*0.5;
+        arr_air[i].z = 0.75;
+        arr_air[i].in = 0;
+
+        arr_air[i].angle_air1 = 3*Pi/2;
+        arr_air[i].angle_air2 = 0;
+        arr_air[i].angle_air3 = 3*Pi/2;
+        arr_air[i].angle_air4 = Pi;
+        arr_air[i].angle_air5 = Pi;
+        arr_air[i].angle_air6 = Pi;
+        arr_air[i].angle_air7 = Pi;
+        arr_air[i].angle_air8 = Pi/2;
+        arr_air[i].angle_air9 = Pi/2;
+        arr_air[i].angle_air10 = 3*Pi/2;
+        arr_air[i].angle_air11 = Pi;
+        arr_air[i].angle_air12 = 3*Pi/2;
+        arr_air[i].indeks1 = 0;
+        arr_air[i].indeks2 = 0;
+        arr_air[i].indeks3 = 0;
+        arr_air[i].indeks4 = 0;
+        arr_air[i].indeks5 = 0;
+        arr_air[i].indeks6 = 0;
+        arr_air[i].indeks7 = 0;
+        arr_air[i].indeks8 = 0;
+        arr_air[i].indeks9 = 0;
+        arr_air[i].indeks10 = 0;
+        arr_air[i].indeks11 = 0;
+    }
+    //
+
+    arr_oil2[0].x = 7;
+    arr_oil2[0].y = -2.6;
+    arr_oil2[0].z = 0.1;
+    arr_oil2[0].in = 1;
+
+    arr_oil2[0].angle1 = Pi/2;
+    arr_oil2[0].angle2 = 0;
+    arr_oil2[0].angle3 = 3*Pi/2;
+    arr_oil2[0].angle4 = Pi;
+    arr_oil2[0].angle5 = Pi;
+    arr_oil2[0].angle6 = Pi;
+    arr_oil2[0].angle7 = 0;
+    arr_oil2[0].angle8 = Pi/2;
+    arr_oil2[0].angle9 = Pi;
+    arr_oil2[0].angle10 = 3*Pi/2;
+    arr_oil2[0].angle11 = Pi;
+    arr_oil2[0].angle12 = 3*Pi/2;
+
+    arr_oil2[0].indeks1 = 0;
+    arr_oil2[0].indeks2 = 0;
+    arr_oil2[0].indeks3 = 0;
+    arr_oil2[0].indeks4 = 0;
+    arr_oil2[0].indeks5 = 0;
+    arr_oil2[0].indeks6 = 0;
+    arr_oil2[0].indeks7 = 0;
+    arr_oil2[0].indeks8 = 0;
+    arr_oil2[0].indeks9 = 0;
+    arr_oil2[0].indeks10 = 0;
+    arr_oil2[0].indeks11 = 0;
+    arr_oil2[0].indeks12 = 0;
+    arr_oil2[0].indeks13 = 0;
+    arr_oil2[0].indeks14 = 0;
+
+    for(int i=0; i<n_oil2; i++){
+        arr_oil2[i].x = 7 - i*0.5;
+        arr_oil2[i].y = -2.6;
+        arr_oil2[i].z = 0.1;
+        arr_oil2[i].in = 0;
+        arr_oil2[i].angle1 = Pi/2;
+        arr_oil2[i].angle2 = 0;
+        arr_oil2[i].angle3 = 3*Pi/2;
+        arr_oil2[i].angle4 = Pi;
+        arr_oil2[i].angle5 = Pi;
+        arr_oil2[i].angle6 = Pi;
+        arr_oil2[i].angle7 = 0;
+        arr_oil2[i].angle8 = Pi/2;
+        arr_oil2[i].angle9 = Pi;
+        arr_oil2[i].angle10 = 3*Pi/2;
+        arr_oil2[i].angle11 = Pi;
+        arr_oil2[i].angle12 = 3*Pi/2;
+        arr_oil2[i].indeks1 = 0;
+        arr_oil2[i].indeks2 = 0;
+        arr_oil2[i].indeks3 = 0;
+        arr_oil2[i].indeks4 = 0;
+        arr_oil2[i].indeks5 = 0;
+        arr_oil2[i].indeks6 = 0;
+        arr_oil2[i].indeks7 = 0;
+        arr_oil2[i].indeks8 = 0;
+        arr_oil2[i].indeks9 = 0;
+        arr_oil2[i].indeks10 = 0;
+        arr_oil2[i].indeks11 = 0;
+        arr_oil2[i].indeks12 = 0;
+        arr_oil2[i].indeks13 = 0;
+        arr_oil2[i].indeks14 = 0;
+    }
+
 
     glutKeyboardFunc(on_keyboard);
     glutDisplayFunc(on_display);
@@ -130,9 +308,7 @@ int main(int argc, char *argv[])
     glutMouseFunc(on_mouse);
     glutMotionFunc(on_motion);
     
-    // glEnable(GL_BLEND);
-    
-    glClearColor(0.1, 0.1, 0.1, 0);
+    glClearColor(0.1, 0.1, 0.11, 0);
     glEnable(GL_DEPTH_TEST);
 
     glEnable(GL_LIGHTING);
@@ -248,7 +424,14 @@ static void on_keyboard(unsigned char key, int x , int y)
         case 'B':
             if(!animation_ongoing){
                 animation_ongoing = 1;
+                air_ongoing = 1;
+                oil1_ongoing = 1;
+                oil2_ongoing = 1;
                 glutTimerFunc(TIMER_INTERVAL, on_timer, TIMER_ID);
+                glutTimerFunc(TIMER_INTERVAL, air_timer, TIMER_ID);
+                glutTimerFunc(TIMER_INTERVAL, oil1_timer, TIMER_ID);
+                glutTimerFunc(TIMER_INTERVAL, oil2_timer, TIMER_ID);
+                
             }
             break;
         case 'e':
@@ -297,33 +480,60 @@ static void on_display(void)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    
     gluLookAt(
-        0+scrollX, 1+scrollY, 25+scrollZ,
+        0+scrollX, 1+scrollY, 20+scrollZ,
         0, 0, 0,
         0, 1, 0
     );
     glMultMatrixf(matrix);
-    // glPushMatrix();
-    // {
-    //     draw_axes();
-    // }
-    // glPopMatrix();
+    
 
      glPushMatrix();
     {
         glTranslatef(-3, 5.5, 0);
+        glScalef(1.7, 1.7, 1.7);
         draw_propeller();
     }
     glPopMatrix();
 
-    glPushMatrix();
-    {
-        GLfloat diffuse1[] = {0,0,1,1};
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse1);
-        glTranslatef(6.15, 1, 0.1);
-        glutSolidSphere(0.05, 20, 20);
+    for(int i=0; i<n_oil2; i++){
+        glPushMatrix();
+        {
+            GLfloat diffuse3[] = {1,1,0,1};
+            glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse3);
+            if(arr_oil2[i].in)
+                glTranslatef(arr_oil2[i].x, arr_oil2[i].y, arr_oil2[i].z);
+            // glutSolidSphere(0.04, 20, 20);
+        }
+        glPopMatrix();
     }
-    glPopMatrix();
+
+    for(int i=0; i<n; i++){
+        glPushMatrix();
+        {
+            GLfloat diffuse2[] = {1,1,0,1};
+            glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse2);
+            
+            if(arr[i].in)
+                glTranslatef(arr[i].x, arr[i].y, arr[i].z);
+            
+            glutSolidSphere(0.04, 20, 20);
+        }
+        glPopMatrix();
+    }
+
+    for(int i=0; i<n_air; i++){
+        glPushMatrix();
+        {
+            GLfloat diffuse1[] = {0,0,1,1};
+            glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse1);
+            if(arr_air[i].in)
+                glTranslatef(arr_air[i].x, arr_air[i].y, arr_air[i].z);
+            // glutSolidSphere(0.05, 20, 20);
+        }
+        glPopMatrix();
+    }
 
     glPushMatrix();
     {
@@ -657,8 +867,8 @@ static void draw_pipeline2(void){
 static void draw_pipeline3(void){
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_SRC_COLOR);
-    GLfloat ambient_coeffs[] = { .5, .1, .1, .1};
-    GLfloat diffuse_coeffs[] = { .7, .2, .2, .1};
+    GLfloat ambient_coeffs[] = { .6, .3, .1, .1};
+    GLfloat diffuse_coeffs[] = { .6, .3, .2, .1};
     GLfloat specular_coeffs[] = { .5, .2, .2, .1};
     
     GLfloat shininess = 10;
@@ -969,23 +1179,6 @@ static void on_mouse(int button, int state, int x, int y)
 {
     mouse_x = x;
     mouse_y = y;
-
-//     if ((button == 3) || (button == 4)) // It's a wheel event
-//    {
-//        // Each wheel event reports like a button click, GLUT_DOWN then GLUT_UP
-//        if (state == GLUT_UP) return; // Disregard redundant GLUT_UP events
-//        scrollX -= 0.5;
-//        scrollY -= 0.5;
-//        scrollZ -= 0.5;
-//        glutPostRedisplay();
-//        printf("Scroll %s At %d %d\n", (button == 3) ? "Up" : "Down", x, y);
-//    }else{  // normal button event
-//         scrollX += 0.5;
-//         scrollY += 0.5;
-//         scrollZ += 0.5;
-//         glutPostRedisplay();
-//        printf("Button %s At %d %d\n", (state == GLUT_DOWN) ? "Down" : "Up", x, y);
-//    }
 }
 
 static void on_motion(int x, int y)
