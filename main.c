@@ -502,9 +502,10 @@ static void on_display(void)
         {
             GLfloat diffuse3[] = {1,1,0,1};
             glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse3);
-            if(arr_oil2[i].in)
+            if(arr_oil2[i].in){
                 glTranslatef(arr_oil2[i].x, arr_oil2[i].y, arr_oil2[i].z);
-            // glutSolidSphere(0.04, 20, 20);
+                glutSolidSphere(0.04, 20, 20);
+            }
         }
         glPopMatrix();
     }
@@ -515,10 +516,10 @@ static void on_display(void)
             GLfloat diffuse2[] = {1,1,0,1};
             glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse2);
             
-            if(arr[i].in)
+            if(arr[i].in){
                 glTranslatef(arr[i].x, arr[i].y, arr[i].z);
-            
-            glutSolidSphere(0.04, 20, 20);
+                glutSolidSphere(0.04, 20, 20);
+            }
         }
         glPopMatrix();
     }
@@ -528,9 +529,10 @@ static void on_display(void)
         {
             GLfloat diffuse1[] = {0,0,1,1};
             glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse1);
-            if(arr_air[i].in)
+            if(arr_air[i].in){
                 glTranslatef(arr_air[i].x, arr_air[i].y, arr_air[i].z);
-            // glutSolidSphere(0.05, 20, 20);
+                glutSolidSphere(0.05, 20, 20);
+            }
         }
         glPopMatrix();
     }
@@ -752,9 +754,7 @@ static void draw_block(void)
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular_coeffs);
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
     
-    // double clip_plane1[] = {1, , 0, 1};
-    // glClipPlane(GL_CLIP_PLANE0, clip_plane1);
-    // glEnable(GL_CLIP_PLANE0);
+    
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_DST_COLOR);
     glPushMatrix();
@@ -765,8 +765,7 @@ static void draw_block(void)
             } 
         glEnd();
     glPopMatrix();
-    // glDisable(GL_CLIP_PLANE0);
-    //
+    
     GLfloat ambient_coeffs3[] = { 0.1, 0.1, 0.1, .3};
     GLfloat diffuse_coeffs3[] = { 0.5, 0.5, 0.5, .3};
     GLfloat specular_coeffs3[] = { .2, .2, .2, .3};

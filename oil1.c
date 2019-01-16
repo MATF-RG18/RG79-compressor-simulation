@@ -98,7 +98,6 @@ static void move_ball(int i){
         arr[i].x = oil1X;
         arr[i].y = oil1Y;
         arr[i].z = oil1Z;
-            printf("%f %f %f\n", arr[i].x, arr[i].y, arr[i].z);
 
         arr[i].angle1 = angle1;
         arr[i].angle2 = angle2;
